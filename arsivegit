@@ -1,0 +1,15 @@
+#!/bin/bash
+
+yardim='arsivegit "tr veya en" "konu adı veya subject name" \nörnek: arsivegit  "tr" "osi modeli" \nörnek: arsivegit "en" "big o notation"\n'
+[ -z $1 ] && echo -en $yardim && exit
+
+sorgu="https://web.archive.org/__wb/sparkline?url=https://$1.wikipedia.org/wiki/"
+
+function sorgula(){
+  wasonucu=$(curl -s $sorgu$2\&output=json| grep -e "[0-9]\{14\}" -o | head -n 1 )
+  [ -z $wasonucu ] && echo "sonuc bulunamadı." && exit
+}
+dil=$1
+kelime=$(echo $2 | tr ' ' '_')
+sorgula  $kelime
+xdg-open "https://web.archive.org/web/$wasonucu/https://$1.wikipedia.org/wiki/$kelime"
